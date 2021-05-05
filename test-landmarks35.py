@@ -33,29 +33,16 @@ while True:
             xmax = int(detection[5]*frame.shape[1])
             ymax = int(detection[6]*frame.shape[0])
             cv2.rectangle(frame, (xmin,ymin), (xmax, ymax), (0,255,0), 2)
-            roiframe = frame[ymin:ymax, xmin:xmax]
+            roiframe = frame[ymin+20:ymax+20, xmin+20:xmax+20]
                         
             blob_35 = cv2.dnn.blobFromImage(roiframe, size=(60, 60), ddepth=cv2.CV_8U) #Landmark 35
             net_35.setInput(blob_35)
             out_35 = net_35.forward()
     
-            for detection_35 in out_35.reshape(1,70):
-                x0 = int(detection_35[0]*roiframe.shape[1])
-                y0 = int(detection_35[1]*roiframe.shape[0])
-                x1 = int(detection_35[2]*roiframe.shape[1])
-                y1 = int(detection_35[3]*roiframe.shape[0])
-                x2 = int(detection_35[4]*roiframe.shape[1])
-                y2 = int(detection_35[5]*roiframe.shape[0])
-                x3 = int(detection_35[6]*roiframe.shape[1])
-                y3 = int(detection_35[7]*roiframe.shape[0])
-                x4 = int(detection_35[8]*roiframe.shape[1])
-                y4 = int(detection_35[9]*roiframe.shape[0])
-                cv2.circle(roiframe, (x0,y0), 3, (0,255,0), -1)
-                cv2.circle(roiframe, (x1,y1), 3, (0,255,0), -1)
-                cv2.circle(roiframe, (x2,y2), 3, (0,255,0), -1)
-                cv2.circle(roiframe, (x3,y3), 3, (0,255,0), -1)
-                cv2.circle(roiframe, (x4,y4), 3, (0,255,0), -1)
-        
+            for detection_35 in enumerate(out_35.reshape(35,2)):
+                k,j = detection_35
+                cv2.circle(roiframe, (int(j[0]*roiframe.shape[1]),int(j[1]*roiframe.shape[0])), 2, (0,255,0), -1)
+                                       
     cv2.imshow('frame', frame)
     key = cv2.waitKey(1)
     if key == 27 or key == ord('q'):
